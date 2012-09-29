@@ -1,5 +1,6 @@
 package org.webservice.countryInfo;
 
+
 /**
  * This class represents all the agregated data build upon the several web services
  * @author balhau

@@ -22,7 +22,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.axis.message.MessageElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -40,7 +39,7 @@ public class CountryInfo{
 	private CountryInfoResult res;
 	private String countryCode;
 	
-	private CountryInfoKV[] getCountriesMap(){
+	public static CountryInfoKV[] getCountriesMap(){
 		CountryInfoKV[] cNInfo=null;
 		GetCountriesResponseGetCountriesResult res=null;
 		CountryInformationServiceSoapProxy proxy1=new CountryInformationServiceSoapProxy();
@@ -72,6 +71,24 @@ public class CountryInfo{
 			}
 		}
 		return cNInfo;
+	}
+	
+	public static String[] getCities(String countryName) throws ParserConfigurationException, SAXException, IOException{
+		GlobalWeatherSoapProxy proxy=new GlobalWeatherSoapProxy();
+		proxy.setEndpoint(proxy.getEndpoint());
+		String xml=proxy.getCitiesByCountry(countryName);
+		Document dom=xml2dom(xml);
+		NodeList els=dom.getElementsByTagName("Table");
+		NodeList eAux;
+		Element e;
+		int len=els.getLength();
+		String[] out=new String[len];
+		for(int i=0;i<len;i++){
+			e=(Element)els.item(i);
+			eAux=e.getElementsByTagName("City");
+			out[i]=eAux.item(0).getFirstChild().getNodeValue();
+		}
+		return out;
 	}
 	
 	private String getGeoNameCountryInfoURL(String iso2Code){
@@ -115,7 +132,7 @@ public class CountryInfo{
 			return sb.toString();
 	}
 	
-	private Document xml2dom(String xml) throws ParserConfigurationException, SAXException, IOException{
+	public static Document xml2dom(String xml) throws ParserConfigurationException, SAXException, IOException{
 		DocumentBuilderFactory dbf=DocumentBuilderFactory.newInstance();
 		InputSource is = new InputSource();
         is.setCharacterStream(new StringReader(xml));
