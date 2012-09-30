@@ -34,3 +34,7 @@ NOTE:
 Before invoke the web service you must set the endpoint to:
 
 https://country-info.herokuapp.com/services/CountryInfo
+
+A web page was developed to demonstrate the web service clients. To get this demo page go to:
+
+http://country-info.herokuapp.com/
